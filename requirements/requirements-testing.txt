@@ -1,0 +1,10 @@
+tox
+mock
+pkgversion
+pytest
+pytest-cov
+pytest-django
+readme_renderer[md]
+twine
+setuptools
+wheel

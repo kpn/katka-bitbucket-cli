@@ -1,0 +1,49 @@
+#language: python
+#python:
+#  - "3.6"
+#
+#services:
+#  - docker
+#
+#stages:
+#  - Test
+#  - Pubish
+#    if: branch = master
+#
+#
+#before_install:
+#  - pip install --upgrade pip
+#install:
+#  - pip install codecov
+#
+#script:
+#  - make test
+#
+#after_success:
+#  - codecov
+
+language: python
+python:
+  - "3.6"
+
+stages:
+  - Prepare
+  - Test
+  - Code Coverage
+  - Pubish
+    if: branch = master
+
+jobs:
+  include:
+    - stage: Prepare
+      services:
+        - docker
+      script:
+        - pip install --upgrade pip
+        - pip install codecov
+    - stage: Test
+      script: make test
+    - stage: Code Coverage
+      script: codecov
+    - stage: publish
+      script: make publish
