@@ -1,29 +1,16 @@
+language: python
+python:
+  - "3.7-dev"
+
 services:
-    - docker
+  - docker
 
-stages:
-  - test
-  - name: publish
-    if: tag IS present
+before_install:
+  - pip install --upgrade pip
+install:
+  - pip install codecov
 
-jobs:
-  include:
-    - stage: test
-      language: python
-      python:
-        - "3.6"
-      before_install:
-        - pip install --upgrade pip
-      install:
-        - pip install codecov
-      script:
-        - make test
-      after_success:
-        - codecov
-    - stage: publish
-      language: generic
-      deploy:
-          provider: script
-          script: make docker/publish
-          on:
-              all_branches: true
+script:
+  - make test
+after_success:
+  - codecov
