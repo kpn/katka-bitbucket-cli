@@ -11,12 +11,22 @@ DATABASES = {
     }
 }
 
-ROOT_URLCONF = 'tests.urls'
+ROOT_URLCONF = 'bitbucket.urls'
+
+FIELD_ENCRYPTION_KEY = 'SURdYnt6gHdgq84TgewXS6WayBQYlHt9Lr8Sryv9yOI='
 
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
+
     'bitbucket',
+
+    'encrypted_model_fields'
 ]
 
 MIDDLEWARE = ()
+
+REQUESTS_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt"
+
+# Bitbucket service
+SERVICE_BITBUCKET_LOCATION = 'https://bitbucket.org/'

@@ -15,7 +15,7 @@ $ make venv
 ## Stack
 
 Katka Bitbucket is build on top of the Python framework Django and the Django Rest
-Framework to build APIs. Under the hood it runs Python 3.6.
+Framework to build APIs. Under the hood it runs Python 3.7.
 
 ### Dependencies
 * [djangorestframework](psycopg2-binary): django toolkit for building Web APIs

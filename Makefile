@@ -1,6 +1,6 @@
 # This Makefile requires the following commands to be available:
 # * virtualenv
-# * python3.6
+# * python3.7.1
 # * docker
 
 IMAGE=katka-bitbucket
@@ -10,7 +10,7 @@ REQUIREMENTS_BASE:=requirements/requirements-base.txt
 REQUIREMENTS_TEST:=requirements/requirements-testing.txt
 REQUIREMENTS_TXT:=requirements.txt
 
-PYTHON_VERSION=python3.6
+PYTHON_VERSION=python3.7
 
 PIP="pip"
 TOX="tox"
@@ -82,7 +82,7 @@ docker/%: docker/build
 
 docker/publish: docker/build
 	docker run --rm -v $(PWD):$(PWD) -w $(PWD) \
-	-e tag=$(TRAVIS_TAG) -e TWINE_PASSWORD=$(TWINE_PASSWORD) -e TWINE_USERNAME=$(TWINE_USERNAME) $(DOCKER_REPOSITORY)/$(IMAGE) \
+	-e tag=$(TAG) -e TWINE_PASSWORD=$(TWINE_PASSWORD) -e TWINE_USERNAME=$(TWINE_USERNAME) $(DOCKER_REPOSITORY)/$(IMAGE) \
 	make publish
 
 
