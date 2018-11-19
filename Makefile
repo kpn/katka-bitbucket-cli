@@ -5,6 +5,7 @@
 
 IMAGE=katka-bitbucket
 DOCKER_REPOSITORY=kpnnv
+TWINE_REPOSITORY_URL?=https://pypi.org/legacy/
 
 REQUIREMENTS_BASE:=requirements/requirements-base.txt
 REQUIREMENTS_TEST:=requirements/requirements-testing.txt
@@ -83,7 +84,7 @@ docker/%: docker/build
 docker/publish: docker/build
 	docker run --rm -v $(PWD):$(PWD) -w $(PWD) \
 	-e tag=$(TAG) -e TWINE_PASSWORD=$(TWINE_PASSWORD) -e TWINE_USERNAME=$(TWINE_USERNAME) $(DOCKER_REPOSITORY)/$(IMAGE) \
-	make publish
+	-e TWINE_REPOSITORY_URL=$(TWINE_REPOSITORY_URL)  make publish
 
 
 # ********** Tests **********
@@ -113,7 +114,7 @@ setup.py:
 publish: setup.py
 	$(PYTHON) setup.py sdist bdist_wheel
 	$(TWINE) check dist/*
-	$(TWINE) upload dist/*
+	$(TWINE) upload dist/* --repository-url $(TWINE_REPOSITORY_URL)
 
 
 # ********** Requirements **********
