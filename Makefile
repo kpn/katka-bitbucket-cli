@@ -83,8 +83,9 @@ docker/%: docker/build
 
 docker/publish: docker/build
 	docker run --rm -v $(PWD):$(PWD) -w $(PWD) \
-	-e tag=$(TAG) -e TWINE_PASSWORD=$(TWINE_PASSWORD) -e TWINE_USERNAME=$(TWINE_USERNAME) $(DOCKER_REPOSITORY)/$(IMAGE) \
-	-e TWINE_REPOSITORY_URL=$(TWINE_REPOSITORY_URL)  make publish
+	-e tag=$(TAG) -e TWINE_PASSWORD=$(TWINE_PASSWORD) -e TWINE_USERNAME=$(TWINE_USERNAME)
+	-e TWINE_REPOSITORY_URL=$(TWINE_REPOSITORY_URL) $(DOCKER_REPOSITORY)/$(IMAGE) \
+	make publish
 
 
 # ********** Tests **********
