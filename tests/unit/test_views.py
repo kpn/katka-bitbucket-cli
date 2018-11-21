@@ -22,7 +22,7 @@ class TestGetRepos:
         response = client.get(
             endpoint,
             content_type='application/json',
-            data={'katka_project_id': 'bead677e-c414-4954-85eb-67ef09ca99f7'}
+            data={'katka_project_id': 'bead677e-c414-4954-85eb-67ef09ca99f7', 'limit': 10, 'start': 2}
         )
 
         assert response.status_code == 200
