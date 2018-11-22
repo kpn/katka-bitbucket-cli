@@ -1,0 +1,93 @@
+{
+    "size": 2,
+    "limit": 2,
+    "isLastPage": false,
+    "values": [
+        {
+            "slug": "invisible_women",
+            "id": 4161,
+            "name": "invisible_women",
+            "scmId": "git",
+            "state": "AVAILABLE",
+            "statusMessage": "Available",
+            "forkable": true,
+            "project": {
+                "key": "MSAP",
+                "id": 1004,
+                "name": "My super awesome project",
+                "description": "My super awesome project",
+                "public": false,
+                "type": "NORMAL",
+                "links": {
+                    "self": [
+                        {
+                            "href": "https://bitbucket.org/projects/MSAP"
+                        }
+                    ]
+                }
+            },
+            "public": false,
+            "links": {
+                "clone": [
+                    {
+                        "href": "ssh://git@bitbucket.org:22/msap/invisible_women.git",
+                        "name": "ssh"
+                    },
+                    {
+                        "href": "https://katka-system-account@bitbucket.org/scm/msap/invisible_women.git",
+                        "name": "http"
+                    }
+                ],
+                "self": [
+                    {
+                        "href": "https://bitbucket.org/projects/msap/repos/invisible_women/browse"
+                    }
+                ]
+            }
+        },
+        {
+            "slug": "katana",
+            "id": 4161,
+            "name": "katana",
+            "scmId": "git",
+            "state": "AVAILABLE",
+            "statusMessage": "Available",
+            "forkable": true,
+            "project": {
+                "key": "MSAP",
+                "id": 1004,
+                "name": "My super awesome project",
+                "description": "My super awesome project",
+                "public": false,
+                "type": "NORMAL",
+                "links": {
+                    "self": [
+                        {
+                            "href": "https://bitbucket.org/projects/MSAP"
+                        }
+                    ]
+                }
+            },
+            "public": false,
+            "links": {
+                "clone": [
+                    {
+                        "href": "ssh://git@bitbucket.org:22/msap/katana.git",
+                        "name": "ssh"
+                    },
+                    {
+                        "href": "https://katka-system-account@bitbucket.org/scm/msap/katana.git",
+                        "name": "http"
+                    }
+                ],
+                "self": [
+                    {
+                        "href": "https://bitbucket.org/projects/msap/repos/katana/browse"
+                    }
+                ]
+            }
+        }
+    ],
+    "start": 0,
+    "nextPageStart": 2
+}

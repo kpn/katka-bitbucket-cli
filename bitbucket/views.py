@@ -9,12 +9,18 @@ from .repos import BitbucketRepos
 class BitbucketReposView(APIView):
     serializer_class = serializers.BitbucketRepos
 
-    # TODO: add permissions and auth classes
-
     def get(self, request, project_id):
         data = request.data
-        data['project_id'] = project_id
-        data.update({'katka_project_id': request.query_params.get('katka_project_id')})
+        if request.query_params.get('limit') is not None:
+            data['limit'] = request.query_params['limit']
+        if request.query_params.get('start') is not None:
+            data['start'] = request.query_params['start']
+        data.update(
+            {
+                'katka_project_id': request.query_params.get('katka_project_id'),
+                'project_id': project_id,
+            }
+        )
 
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
