@@ -1,8 +1,8 @@
-from bitbucket.exceptions import bitbucket_exception_to_api
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import serializers
+from .exceptions import bitbucket_exception_to_api
 from .repos import BitbucketRepos
 
 
@@ -11,10 +11,7 @@ class BitbucketReposView(APIView):
 
     def get(self, request, project_id):
         data = request.data
-        if request.query_params.get('limit') is not None:
-            data['limit'] = request.query_params['limit']
-        if request.query_params.get('start') is not None:
-            data['start'] = request.query_params['start']
+        data.update(request.query_params.dict())
         data.update(
             {
                 'katka_project_id': request.query_params.get('katka_project_id'),

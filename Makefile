@@ -29,7 +29,7 @@ MAKE_MIGRATIONS=`$(shell echo $(PYTHON)) manage.py makemigrations;`
 MIGRATIONS_CHECK=`echo $(MAKE_MIGRATIONS_OUTPUT) | awk '{print match($$0, "No changes detected")}'`
 
 
-.PHONY: clean pyclean test test_local check_forgotten_migrations migrate tox install_requirement_txt
+.PHONY: clean pyclean test test_local check_forgotten_migrations migrate tox install_requirement_txt venv
 
 
 # ********** Cleaning **********

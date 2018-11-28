@@ -27,7 +27,6 @@ def load_db_fixture(request: 'pytest.fixtures.SubRequest', django_db_blocker) ->
 
     This assumes that fixture files are located under a `fixtures`
     subdirectory, at the same level as the test module.
-
     """
     fixture_filename = request.param['fixture_filename']
     fixture_path_abs = Path(request.fspath.dirname) / 'fixtures' / fixture_filename
