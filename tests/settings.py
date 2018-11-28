@@ -15,16 +15,35 @@ ROOT_URLCONF = 'bitbucket.urls'
 
 FIELD_ENCRYPTION_KEY = 'SURdYnt6gHdgq84TgewXS6WayBQYlHt9Lr8Sryv9yOI='
 
-INSTALLED_APPS = [
+INSTALLED_APPS = (
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.sessions',
 
     'bitbucket',
 
-    'encrypted_model_fields'
-]
+    'encrypted_model_fields',
+    'guardian',
+)
 
-MIDDLEWARE = ()
+MIDDLEWARE = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)
+
+# Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
 
 REQUESTS_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt"
 

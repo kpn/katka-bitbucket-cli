@@ -16,7 +16,7 @@ class TestBitbucketRepos:
             ]
         }
 
-        service = BitbucketRepos(katka_project_id='wonder_woman', project_id='the_wasp')
+        service = BitbucketRepos(katka_project=mock.Mock(), project_id='the_wasp')
         repos = service.get_repos()
 
         assert service.path == 'projects/the_wasp/repos'
@@ -27,7 +27,7 @@ class TestBitbucketRepos:
 
     def test_empty_project_id(self):
         with pytest.raises(ValueError):
-            BitbucketRepos(katka_project_id='wonder_woman', project_id=None)
+            BitbucketRepos(katka_project=mock.Mock(), project_id=None)
 
     @mock.patch('bitbucket.service.BitbucketService.get')
     @mock.patch('bitbucket.service.KatkaProject.objects')
@@ -38,7 +38,7 @@ class TestBitbucketRepos:
                 {'something_else': 'value'},
             ]
         }
-        service = BitbucketRepos(katka_project_id='wonder_woman', project_id='the_wasp')
+        service = BitbucketRepos(katka_project=mock.Mock(), project_id='the_wasp')
 
         with pytest.raises(ReposNotFound):
             service.get_repos()
@@ -47,7 +47,7 @@ class TestBitbucketRepos:
     @mock.patch('bitbucket.service.KatkaProject.objects')
     def test_nno_repos(self, mock_db_katka_project, mock_get_request):
         mock_get_request.return_value = {}
-        service = BitbucketRepos(katka_project_id='wonder_woman', project_id='the_wasp')
+        service = BitbucketRepos(katka_project=mock.Mock(), project_id='the_wasp')
 
         with pytest.raises(ReposNotFound):
             service.get_repos()

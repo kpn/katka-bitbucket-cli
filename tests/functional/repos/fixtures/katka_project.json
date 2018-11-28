@@ -1,10 +1,25 @@
 [
-  {
-    "model": "bitbucket.katkaproject",
-    "pk": "1",
-    "fields": {
-      "project_id": "4cb432f5-0def-48b6-ad05-f1c082b1f1b8",
-      "oauth_access_token": "MzUyMjI5ODY0ODkyOlP3Ysc9XRyD+a+kfISthatC3nL2"
+    {
+        "model": "bitbucket.katkaproject",
+        "pk": "1",
+        "fields": {
+            "project_id": "4cb432f5-0def-48b6-ad05-f1c082b1f1b8",
+            "oauth_access_token": "MzUyMjI5ODY0ODkyOlP3Ysc9XRyD+a+kfISthatC3nL2"
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 1,
+        "fields": {
+            "name": "d-nitro"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": "1",
+        "fields": {
+            "username": "super_saiyan",
+            "password": "pbkdf2_sha256$120000$wpwXBj40ENaY$KhjV740Y/L6gO8LiB4xW5pgd6tGXhfmVuTUYPknPyTc="
+        }
     }
-  }
 ]

@@ -19,8 +19,14 @@ Framework to build APIs. Under the hood it runs Python 3.7.
 
 ### Dependencies
 * [djangorestframework](psycopg2-binary): django toolkit for building Web APIs
+* [django-encrypted-model-fields](django-encrypted-model-fields): save encrypted fields on DB
+* [django-guardian](django-guardian): per object permissions (read the [article](django-guardian-article) about it
+for further information)
 
 [djangorestframework]: https://github.com/encode/django-rest-framework
+[django-encrypted-model-fields]: https://gitlab.com/lansharkconsulting/django/django-encrypted-model-fields/
+[django-guardian]: https://github.com/django-guardian/django-guardia
+[django-guardian-article]: https://github.com/djangoadvent/djangoadvent-articles/blob/master/1.2/06_object-permissions.rst
 
 ## Contributing
 

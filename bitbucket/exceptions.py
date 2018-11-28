@@ -1,7 +1,8 @@
 import logging
 from contextlib import contextmanager
 
-from bitbucket.models import KatkaProject
+from django.http import Http404
+
 from requests import HTTPError
 from rest_framework.exceptions import APIException, AuthenticationFailed, NotFound, PermissionDenied
 
@@ -11,18 +12,19 @@ class ReposNotFound(Exception):
 
 
 class BitbucketBaseAPIException(APIException):
-    def __init__(self, detail=None, code=None, status_code=None):
-        super().__init__(detail, code)
-        if status_code:
-            self.status_code = status_code
+    pass
 
 
 class ReposNotFoundAPIException(NotFound):
-    default_detail = 'No repos found for that project_id'
+    default_detail = 'No repos found for that project_id.'
+
+
+class KatkaProjectNotFoundAPIException(NotFound):
+    default_detail = 'Katka project not found.'
 
 
 class ProjectNotFoundAPIException(NotFound):
-    default_detail = 'Project not found'
+    default_detail = 'Project not found.'
 
 
 @contextmanager
@@ -31,8 +33,8 @@ def bitbucket_exception_to_api():
         yield
     except ReposNotFound:
         raise ReposNotFoundAPIException()
-    except KatkaProject.DoesNotExist:
-        raise ProjectNotFoundAPIException()
+    except Http404:
+        raise KatkaProjectNotFoundAPIException()
     except HTTPError as ex:
         if ex.response.status_code == 401:
             raise AuthenticationFailed()
@@ -51,4 +53,4 @@ def bitbucket_exception_to_api():
         else:
             logging.exception(f'Unexpected Bitbucket exception: {str(ex)}')
 
-        raise BitbucketBaseAPIException(status_code=ex.response.status_code)
+        raise BitbucketBaseAPIException()
