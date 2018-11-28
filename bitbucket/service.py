@@ -11,19 +11,15 @@ log = logging.getLogger(__name__)
 
 @dataclass
 class BitbucketService:
-    katka_project_id: str
+    katka_project: KatkaProject
     limit: int = None
     start: int = None
 
     def __post_init__(self):
-        """
-        Raises:
-            bitbucket.models.KatkaProject.DoesNotExist: in case the given id for the katka project does not exist
-        """
-        self.oauth_access_token = KatkaProject.objects.get(project_id=self.katka_project_id).oauth_access_token
+        self.oauth_access_token = self.katka_project.oauth_access_token
 
         if not self.oauth_access_token:
-            log.debug(f'No access token found for katka project {self.katka_project_id}')
+            log.debug(f'No access token found for katka project {self.katka_project}')
 
         self.base_url = settings.SERVICE_BITBUCKET_LOCATION
         self.base_path = 'rest/api/1.0'

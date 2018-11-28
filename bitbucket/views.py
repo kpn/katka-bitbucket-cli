@@ -1,33 +1,26 @@
-from bitbucket.exceptions import bitbucket_exception_to_api
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import serializers
+from .exceptions import bitbucket_exception_to_api
+from .mixins import BitbucketPermissionRequiredMixin
 from .repos import BitbucketRepos
 
 
-class BitbucketReposView(APIView):
-    serializer_class = serializers.BitbucketRepos
+class BitbucketReposView(BitbucketPermissionRequiredMixin):
+    serializer_class = serializers.BitbucketReposSerializer
 
     def get(self, request, project_id):
         data = request.data
-        if request.query_params.get('limit') is not None:
-            data['limit'] = request.query_params['limit']
-        if request.query_params.get('start') is not None:
-            data['start'] = request.query_params['start']
-        data.update(
-            {
-                'katka_project_id': request.query_params.get('katka_project_id'),
-                'project_id': project_id,
-            }
-        )
+        data.update(request.query_params.dict())
+        data.update({'project_id': project_id})
 
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
         with bitbucket_exception_to_api():
-            resp = BitbucketRepos(**validated_data).get_repos()
+            resp = BitbucketRepos(katka_project=self.get_object(), **validated_data).get_repos()
 
         return Response(data=resp)
 
