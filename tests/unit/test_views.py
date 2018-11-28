@@ -2,7 +2,9 @@ from django.urls import reverse
 
 import mock
 import pytest
-from bitbucket.exceptions import ProjectNotFoundAPIException, ReposNotFound, ReposNotFoundAPIException
+from bitbucket.exceptions import (
+    BadRequestAPIException, ProjectNotFoundAPIException, ReposNotFound, ReposNotFoundAPIException,
+)
 from bitbucket.models import KatkaProject
 from requests import HTTPError, Response
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
@@ -95,6 +97,7 @@ class TestGetRepos:
         )
 
         assert response.status_code == 400
+        assert str(response.data['detail']) == BadRequestAPIException.default_detail
 
     @mock.patch('bitbucket.views.BitbucketRepos')
     def test_project_http_no_detail(self, mock_bitbucket_repos, client):
@@ -112,7 +115,7 @@ class TestGetRepos:
             data={'katka_project_id': 'bead677e-c414-4954-85eb-67ef09ca99f7'}
         )
 
-        assert response.status_code == 503
+        assert response.status_code == 500
 
     @pytest.mark.parametrize(
         'code, detail', [(401, AuthenticationFailed.default_detail), (403, PermissionDenied.default_detail)]
