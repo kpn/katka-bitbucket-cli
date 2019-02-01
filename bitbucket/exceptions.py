@@ -1,22 +1,15 @@
 import logging
 from contextlib import contextmanager
 
-from bitbucket.models import KatkaProject
 from requests import HTTPError
 from rest_framework import status
 from rest_framework.exceptions import APIException, AuthenticationFailed, NotFound, PermissionDenied
 
-
-class ReposNotFound(Exception):
-    pass
+from .models import KatkaProject
 
 
 class BitbucketBaseAPIException(APIException):
     pass
-
-
-class ReposNotFoundAPIException(NotFound):
-    default_detail = 'No repos found for that project_id.'
 
 
 class ProjectNotFoundAPIException(NotFound):
@@ -30,11 +23,9 @@ class BadRequestAPIException(BitbucketBaseAPIException):
 
 
 @contextmanager
-def bitbucket_exception_to_api():
+def bitbucket_service_exception_to_api():
     try:
         yield
-    except ReposNotFound:
-        raise ReposNotFoundAPIException()
     except KatkaProject.DoesNotExist:
         raise ProjectNotFoundAPIException()
     except HTTPError as ex:
@@ -57,5 +48,8 @@ def bitbucket_exception_to_api():
 
         if ex.response.status_code == status.HTTP_400_BAD_REQUEST:
             raise BadRequestAPIException()
+
+        if ex.response.status_code == status.HTTP_404_NOT_FOUND:
+            raise NotFound()
 
         raise BitbucketBaseAPIException()

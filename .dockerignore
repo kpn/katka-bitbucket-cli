@@ -3,6 +3,8 @@
 .idea
 .pytest_cache
 .tox
+dist
 htmlcov
 venv
 setup.py
+**/__pycache__

@@ -17,7 +17,7 @@ class TestBitbucketService:
 
         service = BitbucketService(katka_project_id='catwoman')
 
-        assert service.oauth_access_token is None
+        assert service._katka_project.oauth_access_token is None
 
     @mock.patch('requests.sessions.Session.get')
     @mock.patch('bitbucket.service.KatkaProject.objects')
@@ -26,20 +26,19 @@ class TestBitbucketService:
         result.json.return_value = {'key', 'value'}
         mock_get_request.return_value = result
         mock_db_katka_project.get.return_value = mock.Mock(oauth_access_token='some_access_token')
-        settings.SERVICE_BITBUCKET_LOCATION = 'https://bitbucket-url.com'
         settings.REQUESTS_CA_BUNDLE = 'path_for_ca_bundle'
 
         bitbucket_service = BitbucketService(katka_project_id='wonder_woman')
         service_result = bitbucket_service.get(params={'key': 'value'})
 
-        assert bitbucket_service.base_url
         assert bitbucket_service.base_path
         assert not bitbucket_service.path
         assert bitbucket_service.client.headers['Authorization'] == 'Bearer some_access_token'
 
         assert service_result == {'key', 'value'}
         mock_get_request.assert_called_once_with(
-            'https://bitbucket-url.com/rest/api/1.0/', params={'key': 'value'}, verify='path_for_ca_bundle'
+            f'{mock_db_katka_project.get().base_url}/rest/api/1.0/',
+            params={'key': 'value'}, verify='path_for_ca_bundle'
         )
         result.raise_for_status.assert_called_once()
 
@@ -48,7 +47,6 @@ class TestBitbucketService:
     def test_http_error(self, mock_db_katka_project, mock_get_request, settings):
         mock_get_request.side_effect = HTTPError
         mock_db_katka_project.get.return_value = mock.Mock(oauth_access_token='some_access_token')
-        settings.SERVICE_BITBUCKET_LOCATION = 'https://bitbucket-url.com'
         settings.REQUESTS_CA_BUNDLE = 'path_for_ca_bundle'
 
         bitbucket_service = BitbucketService(katka_project_id='wonder_woman', limit=2, start=0)
@@ -57,5 +55,6 @@ class TestBitbucketService:
             bitbucket_service.get()
 
         mock_get_request.assert_called_once_with(
-            'https://bitbucket-url.com/rest/api/1.0/', params={'limit': 2, 'start': 0}, verify='path_for_ca_bundle'
+            f'{mock_db_katka_project.get().base_url}/rest/api/1.0/',
+            params={'limit': 2, 'start': 0}, verify='path_for_ca_bundle'
         )

@@ -1,0 +1,39 @@
+{
+    "size": 2,
+    "limit": 2,
+    "isLastPage": false,
+    "values": [
+        {
+            "key": "MSAP",
+            "id": 1004,
+            "name": "My super awesome project",
+            "description": "My super awesome project",
+            "public": false,
+            "type": "NORMAL",
+            "links": {
+                "self": [
+                    {
+                        "href": "https://bitbucket.org/projects/MSAP"
+                    }
+                ]
+            }
+        },
+        {
+            "key": "NSAP",
+            "id": 1515,
+            "name": "Not so awesome project",
+            "description": "Not so awesome project",
+            "public": false,
+            "type": "NORMAL",
+            "links": {
+                "self": [
+                    {
+                        "href": "https://bitbucket.org/projects/NSAP"
+                    }
+                ]
+            }
+        }
+    ],
+    "start": 0,
+    "nextPageStart": 2
+}

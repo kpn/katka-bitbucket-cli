@@ -9,7 +9,7 @@ import pytest
 @pytest.mark.parametrize(
     'load_db_fixture', [{'fixture_filename': 'katka_project.json'}], indirect=True)
 @mock.patch('requests.sessions.Session.request')
-class TestGetReposValidToken:
+class TestGetRepos:
     def test_existing_repos(self, mock_request, load_db_fixture, load_json_fixture, client):
         response = mock.Mock()
         response.raise_for_status.return_value = None
@@ -23,9 +23,14 @@ class TestGetReposValidToken:
             data={'katka_project_id': '4cb432f5-0def-48b6-ad05-f1c082b1f1b8', 'limit': 10, 'start': 2}
         )
 
-        assert len(response.data) == 2
-        assert response.data[0]['slug'] == response.data[0]['name'] == 'invisible_women'
-        assert response.data[1]['slug'] == response.data[1]['name'] == 'katana'
+        assert len(response.data['values']) == 2
+        assert response.data['start'] == 0
+        assert response.data['limit'] == 2
+        assert response.data['size'] == 2
+        assert response.data['isLastPage'] is False
+        assert response.data['nextPageStart'] == 2
+        assert response.data['values'][0]['slug'] == response.data['values'][0]['name'] == 'invisible_women'
+        assert response.data['values'][1]['slug'] == response.data['values'][1]['name'] == 'katana'
 
     def test_empty_project(self, mock_request, load_db_fixture, load_json_fixture, client):
         response = mock.Mock()
@@ -40,4 +45,10 @@ class TestGetReposValidToken:
             data={'katka_project_id': '4cb432f5-0def-48b6-ad05-f1c082b1f1b8', 'limit': 10, 'start': 2}
         )
 
-        assert response.status_code == 404
+        assert response.status_code == 200
+        assert len(response.data['values']) == 0
+        assert response.data['start'] == 0
+        assert response.data['limit'] == 0
+        assert response.data['size'] == 0
+        assert response.data['isLastPage'] is True
+        assert response.data['nextPageStart'] == 0
