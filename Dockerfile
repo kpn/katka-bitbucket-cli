@@ -6,7 +6,11 @@ ENV PROJECT_ROOT /app
 
 WORKDIR $PROJECT_ROOT
 
-COPY . .
+COPY requirements.txt requirements.txt
+COPY requirements requirements
+COPY Makefile Makefile
 RUN make install_requirement_txt
+
+COPY . .
 
 CMD ["make", "test"]

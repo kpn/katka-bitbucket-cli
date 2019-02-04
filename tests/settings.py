@@ -29,4 +29,4 @@ MIDDLEWARE = ()
 REQUESTS_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt"
 
 # Bitbucket service
-SERVICE_BITBUCKET_LOCATION = 'https://bitbucket.org/'
+DEFAULT_BITBUCKET_SERVICE_LOCATION = 'https://bitbucket.org/'

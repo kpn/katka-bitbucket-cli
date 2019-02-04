@@ -2,22 +2,22 @@ from django.urls import reverse
 
 import mock
 import pytest
-from bitbucket.exceptions import (
-    BadRequestAPIException, ProjectNotFoundAPIException, ReposNotFound, ReposNotFoundAPIException,
-)
+from bitbucket.exceptions import BadRequestAPIException, ProjectNotFoundAPIException
 from bitbucket.models import KatkaProject
 from requests import HTTPError, Response
-from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
+from rest_framework.exceptions import AuthenticationFailed, NotFound, PermissionDenied
 
 
-class TestGetRepos:
+class TestGetBitbucketReposView:
     @mock.patch('bitbucket.views.BitbucketRepos')
     def test_get_existing_repos(self, mock_bitbucket_repos, client):
         result = mock.Mock()
-        result.get_repos.return_value = [
-            {'name': 'super_man', 'slug': 'super'},
-            {'name': 'batman', 'slug': 'bat'},
-        ]
+        result.get_repos.return_value = {
+            'values': [
+                {'name': 'super_man', 'slug': 'super'},
+                {'name': 'batman', 'slug': 'bat'},
+            ]
+        }
         mock_bitbucket_repos.return_value = result
 
         endpoint = reverse('repos', kwargs={'project_id': 'TIPD'})
@@ -28,12 +28,12 @@ class TestGetRepos:
         )
 
         assert response.status_code == 200
-        assert len(response.data) == 2
+        assert len(response.data['values']) == 2
 
     @mock.patch('bitbucket.views.BitbucketRepos')
-    def test_repos_not_found(self, mock_bitbucket_repos, client):
+    def test_empty_repos_list(self, mock_bitbucket_repos, client):
         result = mock.Mock()
-        result.get_repos.side_effect = ReposNotFound
+        result.get_repos.return_value = {}
         mock_bitbucket_repos.return_value = result
 
         endpoint = reverse('repos', kwargs={'project_id': 'TIPD'})
@@ -43,11 +43,12 @@ class TestGetRepos:
             data={'katka_project_id': 'bead677e-c414-4954-85eb-67ef09ca99f7'}
         )
 
-        assert response.status_code == 404
-        assert str(response.data['detail']) == ReposNotFoundAPIException.default_detail
+        assert response.status_code == 200
+        assert len(response.data['values']) == 0
+        assert response.data.get('start') is None
 
     @mock.patch('bitbucket.views.BitbucketRepos')
-    def test_project_not_found(self, mock_bitbucket_repos, client):
+    def test_katka_project_not_found(self, mock_bitbucket_repos, client):
         result = mock.Mock()
         result.get_repos.side_effect = KatkaProject.DoesNotExist
         mock_bitbucket_repos.return_value = result
@@ -118,10 +119,15 @@ class TestGetRepos:
         assert response.status_code == 500
 
     @pytest.mark.parametrize(
-        'code, detail', [(401, AuthenticationFailed.default_detail), (403, PermissionDenied.default_detail)]
+        'code, detail',
+        (
+            (401, AuthenticationFailed.default_detail),
+            (403, PermissionDenied.default_detail),
+            (404, NotFound.default_detail)
+        )
     )
     @mock.patch('bitbucket.views.BitbucketRepos')
-    def test_auth_exceptions(self, mock_bitbucket_repos, code, detail, client):
+    def test_exceptions(self, mock_bitbucket_repos, code, detail, client):
         result = mock.Mock()
         response = Response()
         response.status_code = code
