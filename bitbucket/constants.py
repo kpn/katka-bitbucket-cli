@@ -1,3 +1,4 @@
+# Permissions ###
 ADMIN = 'ADMIN'
 SYS_ADMIN = 'SYS_ADMIN'
 LICENSED_USER = 'LICENSED_USER'
