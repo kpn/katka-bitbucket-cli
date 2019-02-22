@@ -1,17 +1,20 @@
 import logging
 
-from django.conf import settings
-
-import requests
-from bitbucket.models import KatkaProject
 from dataclasses import dataclass
+
+from .base import KatkaService
+from .conf import settings
+from .credentials import CredentialsProvider
+from .exceptions import bitbucket_service_exception_to_api
 
 log = logging.getLogger(__name__)
 
 
 @dataclass
-class BitbucketService:
-    katka_project_id: str
+class BitbucketService(KatkaService):
+    credentials_provider: CredentialsProvider = None
+    base_url: str = None
+
     start: int = None
     limit: int = None
 
@@ -20,27 +23,15 @@ class BitbucketService:
         Raises:
             bitbucket.models.KatkaProject.DoesNotExist: in case the given id for the katka project does not exist
         """
-        self._katka_project = KatkaProject.objects.get(project_id=self.katka_project_id)
-
-        if not self._katka_project.oauth_access_token:
-            log.debug(f'No access token found for katka project {self.katka_project_id}')
-
+        self.base_url = self.base_url or settings.DEFAULT_BITBUCKET_SERVICE_LOCATION
+        self.base_url = self.base_url.rstrip('/')
         self.base_path = 'rest/api/1.0'
-        self.path = ''
+        self.bearer_token = self.credentials_provider.access_token if self.credentials_provider else None
 
-    @property
-    def client(self) -> requests.sessions.Session:
-        session = requests.Session()
-        session.headers.update({
-            'Authorization': f'Bearer {self._katka_project.oauth_access_token}',
-            'Accept': 'application/json',
-            'User-Agent': 'katka'
-        })
-        return session
-
-    def get(self, params: dict = None) -> dict:
-        '''
+    def get(self, path: str = '', params: dict = None) -> dict:
+        """
         Args:
+            path(str): the specific path to get the resource from
             params(dict): the params for query string
 
         Returns:
@@ -48,14 +39,17 @@ class BitbucketService:
 
         Raises:
             requests.exceptions.HTTPError: in case there is a HTTP error during the request
-        '''
-        url = f'{self._katka_project.base_url}/{self.base_path}/{self.path}'
+        """
+        url = f'{self.base_url}/{self.base_path}/{path}'
         params = params or {}
         if self.start is not None:
             params['start'] = self.start
         if self.limit is not None:
             params['limit'] = self.limit
 
-        resp = self.client.get(url, params=params, verify=settings.REQUESTS_CA_BUNDLE)
-        resp.raise_for_status()
+        resp = super().get(url, params=params)
+
+        with bitbucket_service_exception_to_api():
+            resp.raise_for_status()
+
         return resp.json()

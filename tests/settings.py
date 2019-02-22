@@ -26,7 +26,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = ()
 
-REQUESTS_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt"
+REQUESTS_CA_BUNDLE = '/etc/ssl/certs/ca-certificates.crt'
 
 # Bitbucket service
 DEFAULT_BITBUCKET_SERVICE_LOCATION = 'https://bitbucket.org/'
+
+# Katka service
+KATKA_SERVICE_LOCATION = 'http://katka.com/'

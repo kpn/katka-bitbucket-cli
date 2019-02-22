@@ -1,11 +1,9 @@
 import logging
 from contextlib import contextmanager
 
-from requests import HTTPError
+from requests import HTTPError, RequestException
 from rest_framework import status
 from rest_framework.exceptions import APIException, AuthenticationFailed, NotFound, PermissionDenied
-
-from .models import KatkaProject
 
 
 class BitbucketBaseAPIException(APIException):
@@ -23,11 +21,18 @@ class BadRequestAPIException(BitbucketBaseAPIException):
 
 
 @contextmanager
+def http_request_exception_to_api():
+    try:
+        yield
+    except (IOError, RequestException) as ex:
+        logging.exception(ex)
+        raise BitbucketBaseAPIException()
+
+
+@contextmanager
 def bitbucket_service_exception_to_api():
     try:
         yield
-    except KatkaProject.DoesNotExist:
-        raise ProjectNotFoundAPIException()
     except HTTPError as ex:
         if ex.response.status_code == status.HTTP_401_UNAUTHORIZED:
             raise AuthenticationFailed()
@@ -42,14 +47,31 @@ def bitbucket_service_exception_to_api():
             raise ProjectNotFoundAPIException()
 
         if errors:
-            logging.exception(f'Unexpected Bitbucket exception: {errors[0].get("message")}')
+            logging.error(f'Unexpected Bitbucket exception: {errors[0].get("message")}')
         else:
-            logging.exception(f'Unexpected Bitbucket exception: {str(ex)}')
+            logging.error(f'Unexpected Bitbucket exception: {str(ex)}')
 
         if ex.response.status_code == status.HTTP_400_BAD_REQUEST:
             raise BadRequestAPIException()
 
         if ex.response.status_code == status.HTTP_404_NOT_FOUND:
             raise NotFound()
+
+        raise BitbucketBaseAPIException()
+
+
+@contextmanager
+def katka_service_exception_to_api():
+    try:
+        yield
+    except HTTPError as ex:
+        error_msg = ex.response.json().get('detail') if ex.response.content else str(ex.response)
+
+        if 400 <= ex.response.status_code < 500:
+            logging.warning(f'A permission error has occurred while trying to access Katka services: {error_msg}')
+            raise PermissionDenied()
+
+        if 500 <= ex.response.status_code < 600:
+            logging.error(f'An error has occurred while accessing Katka services: {error_msg}')
 
         raise BitbucketBaseAPIException()

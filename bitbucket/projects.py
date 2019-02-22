@@ -13,8 +13,6 @@ class BitbucketProjects(BitbucketService):
     permission: str = None
 
     def get_projects(self, params: dict = None) -> dict:
-        self.path = 'projects'
-
         params = params or {}
 
         if self.name:
@@ -22,4 +20,4 @@ class BitbucketProjects(BitbucketService):
         if self.permission:
             params['permission'] = self.permission
 
-        return super().get(params=params)
+        return super().get(path='projects', params=params)

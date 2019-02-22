@@ -1,10 +1,13 @@
 from rest_framework import serializers
 
 from . import constants
+from .conf import settings
 
 
 class BitbucketRequest(serializers.Serializer):
-    katka_project_id = serializers.UUIDField(required=True)
+    credential_public_id = serializers.CharField(required=False)
+    base_url = serializers.URLField(required=False,
+                                    default=settings.DEFAULT_BITBUCKET_SERVICE_LOCATION)  # the bitbucket base url
     start = serializers.IntegerField(min_value=0, required=False)  # first element index of the response list
     limit = serializers.IntegerField(min_value=0, required=False)  # max number of elements to be retrieved
 
@@ -38,7 +41,7 @@ class BitbucketProjectsResponse(BitbucketResponse):
 # Bitbucket Repos
 
 class BitbucketReposRequest(BitbucketRequest):
-    project_id = serializers.CharField(required=True)
+    project_key = serializers.CharField(required=True, allow_null=False, allow_blank=False)
 
 
 class BitbucketRepoDetails(serializers.Serializer):
