@@ -65,13 +65,12 @@ def katka_service_exception_to_api():
     try:
         yield
     except HTTPError as ex:
-        error_msg = ex.response.json().get('detail') if ex.response.content else str(ex.response)
 
         if 400 <= ex.response.status_code < 500:
-            logging.warning(f'A permission error has occurred while trying to access Katka services: {error_msg}')
+            logging.warning(f'A permission error has occurred while trying to access Katka services: {str(ex)}')
             raise PermissionDenied()
 
         if 500 <= ex.response.status_code < 600:
-            logging.error(f'An error has occurred while accessing Katka services: {error_msg}')
+            logging.error(f'An error has occurred while accessing Katka services: {str(ex)}')
 
         raise BitbucketBaseAPIException()
