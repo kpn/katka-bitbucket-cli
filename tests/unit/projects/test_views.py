@@ -21,7 +21,7 @@ class TestGetBitbucketProjectsView:
             endpoint,
             content_type='application/json',
             data={
-                'credential_public_id': 'bead677e-c414-4954-85eb-67ef09ca99f7',
+                'credential': 'bead677e-c414-4954-85eb-67ef09ca99f7',
                 'limit': 10, 'start': 2, 'permission': 'PROJECT_READ'
             }
         )
@@ -57,7 +57,7 @@ class TestGetBitbucketProjectsView:
         response = client.get(
             endpoint,
             content_type='application/json',
-            data={'credential_public_id': 'bead677e-c414-4954-85eb-67ef09ca99f7'}
+            data={'credential': 'bead677e-c414-4954-85eb-67ef09ca99f7'}
         )
 
         assert response.status_code == 500

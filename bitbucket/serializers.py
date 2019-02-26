@@ -5,7 +5,7 @@ from .conf import settings
 
 
 class BitbucketRequest(serializers.Serializer):
-    credential_public_id = serializers.CharField(required=False)
+    credential = serializers.CharField(required=False)  # the credential id used to fetch the actual credential value
     base_url = serializers.URLField(required=False,
                                     default=settings.DEFAULT_BITBUCKET_SERVICE_LOCATION)  # the bitbucket base url
     start = serializers.IntegerField(min_value=0, required=False)  # first element index of the response list
