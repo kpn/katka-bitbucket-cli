@@ -19,7 +19,7 @@ class BitbucketProjectsView(APIView):
         validated_data = serializer.validated_data
 
         validated_data.update({
-            'credentials_provider': KatkaCredentialsService(request, validated_data.pop('credential_public_id', None))
+            'credentials_provider': KatkaCredentialsService(request, validated_data.pop('credential', None))
         })
 
         resp = BitbucketProjects(**validated_data).get_projects()
@@ -40,7 +40,7 @@ class BitbucketReposView(APIView):
         validated_data = serializer.validated_data
 
         validated_data.update({
-            'credentials_provider': KatkaCredentialsService(request, validated_data.pop('credential_public_id', None))
+            'credentials_provider': KatkaCredentialsService(request, validated_data.pop('credential', None))
         })
 
         resp = BitbucketRepos(**validated_data).get_repos()

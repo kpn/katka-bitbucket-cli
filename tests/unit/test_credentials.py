@@ -20,7 +20,7 @@ class TestKatkaCredentialsService:
 
         with settings(KATKA_SERVICE_LOCATION='https://r2-d2.com/'):
             katka_credentials_service = KatkaCredentialsService(
-                request=mock.Mock(auth='bt'), credential_public_id='wonder_women'
+                request=mock.Mock(auth='bt'), credential='wonder_women'
             )
 
         assert katka_credentials_service.base_url == 'https://r2-d2.com'
@@ -42,7 +42,7 @@ class TestKatkaCredentialsService:
         mock_katka_service_get.return_value = response
 
         katka_credentials_service = KatkaCredentialsService(
-            request=mock.Mock(auth='bt'), credential_public_id='wonder_women'
+            request=mock.Mock(auth='bt'), credential='wonder_women'
         )
 
         with pytest.raises(api_exception):

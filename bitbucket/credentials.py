@@ -12,8 +12,8 @@ class CredentialsProvider:
 
 
 class KatkaCredentialsService(CredentialsProvider, KatkaService):
-    def __init__(self, request, credential_public_id: str = None):
-        self.credential_public_id = credential_public_id
+    def __init__(self, request, credential: str = None):
+        self.credential = credential
 
         self.base_url = settings.KATKA_SERVICE_LOCATION.rstrip('/')
         self.base_path = 'credentials'
@@ -22,16 +22,16 @@ class KatkaCredentialsService(CredentialsProvider, KatkaService):
     @cached_property
     def access_token(self) -> str:
         """
-        Provides the access token for given `credential_public_id`.
+        Provides the access token for given `credential`.
 
         Returns:
             str: the access token
         """
 
-        if not self.credential_public_id:
+        if not self.credential:
             return None
 
-        path = f'{self.base_path}/{self.credential_public_id}/secrets/{settings.CREDENTIALS_ACCESS_TOKEN_KEY}/'
+        path = f'{self.base_path}/{self.credential}/secrets/{settings.CREDENTIALS_ACCESS_TOKEN_KEY}/'
         url = f'{self.base_url}/{path}'
 
         resp = super().get(url)

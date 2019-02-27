@@ -23,7 +23,7 @@ class TestGetRepos:
         response = client.get(
             endpoint,
             content_type='application/json',
-            data={'credential_public_id': '4cb432f5-0def-48b6-ad05-f1c082b1f1b8', 'limit': 10, 'start': 2}
+            data={'credential': '4cb432f5-0def-48b6-ad05-f1c082b1f1b8', 'limit': 10, 'start': 2}
         )
 
         assert len(response.data['values']) == 2
@@ -49,7 +49,7 @@ class TestGetRepos:
         response = client.get(
             endpoint,
             content_type='application/json',
-            data={'credential_public_id': '4cb432f5-0def-48b6-ad05-f1c082b1f1b8', 'limit': 10, 'start': 2}
+            data={'credential': '4cb432f5-0def-48b6-ad05-f1c082b1f1b8', 'limit': 10, 'start': 2}
         )
 
         assert response.status_code == 200
@@ -77,7 +77,7 @@ class TestGetRepos:
         response = client.get(
             endpoint,
             content_type='application/json',
-            data={'credential_public_id': '4cb432f5-0def-48b6-ad05-f1c082b1f1b9', 'limit': 10, 'start': 2}
+            data={'credential': '4cb432f5-0def-48b6-ad05-f1c082b1f1b9', 'limit': 10, 'start': 2}
         )
 
         assert response.status_code == BitbucketBaseAPIException.status_code
@@ -113,7 +113,7 @@ class TestGetReposNoCredentials:
         response = client.get(
             endpoint,
             content_type='application/json',
-            data={'credential_public_id': '4cb432f5-0def-48b6-ad05-f1c082b1f1b9', 'limit': 10, 'start': 2}
+            data={'credential': '4cb432f5-0def-48b6-ad05-f1c082b1f1b9', 'limit': 10, 'start': 2}
         )
 
         assert response.status_code == PermissionDenied.status_code
