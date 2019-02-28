@@ -19,5 +19,10 @@ urlpatterns = [
         'projects/<str:project_key>/repos/',
         views.BitbucketReposView.as_view(),
         name='repos'
+    ),
+    path(
+        'projects/<str:project_key>/repos/<str:repository_name>/commits/',
+        views.BitbucketCommitsView.as_view(),
+        name='commits'
     )
 ]

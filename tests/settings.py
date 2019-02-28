@@ -20,13 +20,36 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
 
     'bitbucket',
-
-    'encrypted_model_fields'
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'ERROR',
+        'handlers': ['console'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        }
+    }
+}
 
 MIDDLEWARE = ()
 
 REQUESTS_CA_BUNDLE = '/etc/ssl/certs/ca-certificates.crt'
+
+TIME_ZONE = 'UTC'
+USE_TZ = True
 
 # Bitbucket service
 DEFAULT_BITBUCKET_SERVICE_LOCATION = 'https://bitbucket.org/'

@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import serializers
+from .commits import BitbucketCommits
 from .credentials import KatkaCredentialsService
 from .projects import BitbucketProjects
 from .repos import BitbucketRepos
@@ -52,3 +53,27 @@ class BitbucketRepoView(APIView):
     def get(self, request, project_key, repo_name=None):
         # TODO implement view to retrieve specific repo information
         return Response()
+
+
+class BitbucketCommitsView(APIView):
+    get_request_serializer_class = serializers.BitbucketCommitsRequest
+    get_response_serializer_class = serializers.BitbucketCommitsResponse
+
+    def get(self, request, project_key, repository_name):
+        request_params = request.query_params.dict()
+        request_params.update({
+            'project_key': project_key,
+            'repository_name': repository_name
+        })
+
+        serializer = self.get_request_serializer_class(data=request_params)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
+        validated_data.update({
+            'credentials_provider': KatkaCredentialsService(request, validated_data.pop('credential', None))
+        })
+
+        resp = BitbucketCommits(**validated_data).get_commits()
+
+        return Response(data=self.get_response_serializer_class(resp).data)

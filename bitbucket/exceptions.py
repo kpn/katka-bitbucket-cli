@@ -1,5 +1,6 @@
 import logging
 from contextlib import contextmanager
+from json import JSONDecodeError
 
 from requests import HTTPError, RequestException
 from rest_framework import status
@@ -58,6 +59,10 @@ def bitbucket_service_exception_to_api():
             raise NotFound()
 
         raise BitbucketBaseAPIException()
+    except JSONDecodeError as ex:
+        logging.exception(ex)
+
+        raise BitbucketBaseAPIException()
 
 
 @contextmanager
@@ -65,12 +70,15 @@ def katka_service_exception_to_api():
     try:
         yield
     except HTTPError as ex:
-
         if 400 <= ex.response.status_code < 500:
             logging.warning(f'A permission error has occurred while trying to access Katka services: {str(ex)}')
             raise PermissionDenied()
 
         if 500 <= ex.response.status_code < 600:
             logging.error(f'An error has occurred while accessing Katka services: {str(ex)}')
+
+        raise BitbucketBaseAPIException()
+    except JSONDecodeError as ex:
+        logging.exception(ex)
 
         raise BitbucketBaseAPIException()
