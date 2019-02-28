@@ -38,5 +38,4 @@ class KatkaCredentialsService(CredentialsProvider, KatkaService):
 
         with katka_service_exception_to_api():
             resp.raise_for_status()
-
-        return resp.json().get('value')
+            return resp.json().get('value')

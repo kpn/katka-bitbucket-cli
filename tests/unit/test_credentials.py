@@ -1,3 +1,5 @@
+from json import JSONDecodeError
+
 import mock
 import pytest
 from bitbucket.conf import settings
@@ -20,7 +22,7 @@ class TestKatkaCredentialsService:
 
         with settings(KATKA_SERVICE_LOCATION='https://r2-d2.com/'):
             katka_credentials_service = KatkaCredentialsService(
-                request=mock.Mock(auth='bt'), credential='wonder_women'
+                request=mock.Mock(auth='bt'), credential='wonder_woman'
             )
 
         assert katka_credentials_service.base_url == 'https://r2-d2.com'
@@ -42,8 +44,20 @@ class TestKatkaCredentialsService:
         mock_katka_service_get.return_value = response
 
         katka_credentials_service = KatkaCredentialsService(
-            request=mock.Mock(auth='bt'), credential='wonder_women'
+            request=mock.Mock(auth='bt'), credential='wonder_woman'
         )
 
         with pytest.raises(api_exception):
+            katka_credentials_service.access_token
+
+    def test_katka_service_json_exception(self, mock_katka_service_get):
+        response = mock.Mock()
+        response.json.side_effect = JSONDecodeError(msg='', doc='', pos=1)
+        mock_katka_service_get.return_value = response
+
+        katka_credentials_service = KatkaCredentialsService(
+            request=mock.Mock(auth='bt'), credential='wonder_woman'
+        )
+
+        with pytest.raises(BitbucketBaseAPIException):
             katka_credentials_service.access_token

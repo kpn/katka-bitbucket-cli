@@ -4,9 +4,9 @@
     "isLastPage": false,
     "values": [
         {
-            "slug": "invisible_women",
+            "slug": "invisible_woman",
             "id": 4161,
-            "name": "invisible_women",
+            "name": "invisible_woman",
             "scmId": "git",
             "state": "AVAILABLE",
             "statusMessage": "Available",
@@ -30,17 +30,17 @@
             "links": {
                 "clone": [
                     {
-                        "href": "ssh://git@bitbucket.org:22/msap/invisible_women.git",
+                        "href": "ssh://git@bitbucket.org:22/msap/invisible_woman.git",
                         "name": "ssh"
                     },
                     {
-                        "href": "https://katka-system-account@bitbucket.org/scm/msap/invisible_women.git",
+                        "href": "https://katka-system-account@bitbucket.org/scm/msap/invisible_woman.git",
                         "name": "http"
                     }
                 ],
                 "self": [
                     {
-                        "href": "https://bitbucket.org/projects/msap/repos/invisible_women/browse"
+                        "href": "https://bitbucket.org/projects/msap/repos/invisible_woman/browse"
                     }
                 ]
             }
