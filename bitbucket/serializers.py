@@ -94,7 +94,7 @@ class BitbucketCommitDetails(serializers.Serializer):
     date = KatkaDateTimeField(required=False, source='committerTimestamp')
     message = serializers.CharField(required=False)
     author = Author(required=False)
-    tags = serializers.ListField(child=serializers.CharField(), required=False, default=list())
+    tags = serializers.ListField(child=serializers.CharField(), required=False)
 
 
 class BitbucketCommitsResponse(BitbucketResponse):

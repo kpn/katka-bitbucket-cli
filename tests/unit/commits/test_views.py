@@ -62,8 +62,7 @@ class TestGetBitbucketCommitsView:
                         'name': 'captain.america@kpn.com',
                         'slug': 'cc501',
                         'display_name': 'America, Captain'
-                    },
-                    'tags': []
+                    }
                 }
             ],
             'message': constants.RESPONSE_OK

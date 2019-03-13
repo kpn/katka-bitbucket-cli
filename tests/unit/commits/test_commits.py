@@ -39,6 +39,9 @@ class TestBitbucketRepos:
                 {'id': 'some_id2', 'tags': []}
             ]
         }  # asserting that tags are not added
+        assert repos_service.tags_provider is not None
+        assert repos_service.tags_provider.credentials_provider is not None
+        assert repos_service.tags_provider.credentials_provider == repos_service.credentials_provider
         mock_get_request.assert_called_once_with(
             params={'merges': 'only'},
             path='projects/the_wasp/repos/winsome/commits'
