@@ -8,6 +8,8 @@ from rest_framework.exceptions import APIException, AuthenticationFailed, NotFou
 
 from . import constants
 
+logger = logging.getLogger(__name__)
+
 
 class BitbucketBaseAPIException(APIException):
     pass
@@ -32,7 +34,7 @@ def http_request_exception_to_api():
     try:
         yield
     except (IOError, RequestException) as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         raise BitbucketBaseAPIException()
 
 
@@ -50,13 +52,13 @@ def bitbucket_service_exception_to_api():
         errors = ex.response.json().get('errors') if ex.response.content else None
 
         if errors and errors[0].get('exceptionName') == 'com.atlassian.bitbucket.project.NoSuchProjectException':
-            logging.warning(errors[0].get('message'))
+            logger.warning(errors[0].get('message'))
             raise ProjectNotFoundAPIException()
 
         if errors:
-            logging.error(f'Unexpected Bitbucket exception: {errors[0].get("message")}')
+            logger.error(f'Unexpected Bitbucket exception: {errors[0].get("message")}')
         else:
-            logging.error(f'Unexpected Bitbucket exception: {str(ex)}')
+            logger.error(f'Unexpected Bitbucket exception: {str(ex)}')
 
         if ex.response.status_code == status.HTTP_400_BAD_REQUEST:
             raise BadRequestAPIException()
@@ -66,7 +68,7 @@ def bitbucket_service_exception_to_api():
 
         raise BitbucketBaseAPIException()
     except JSONDecodeError as ex:
-        logging.exception(ex)
+        logger.exception(ex)
 
         raise BitbucketBaseAPIException()
 
@@ -77,14 +79,14 @@ def katka_service_exception_to_api():
         yield
     except HTTPError as ex:
         if 400 <= ex.response.status_code < 500:
-            logging.warning(f'A permission error has occurred while trying to access Katka services: {str(ex)}')
+            logger.warning(f'A permission error has occurred while trying to access Katka services: {str(ex)}')
             raise PermissionDenied()
 
         if 500 <= ex.response.status_code < 600:
-            logging.error(f'An error has occurred while accessing Katka services: {str(ex)}')
+            logger.error(f'An error has occurred while accessing Katka services: {str(ex)}')
 
         raise BitbucketBaseAPIException()
     except JSONDecodeError as ex:
-        logging.exception(ex)
+        logger.exception(ex)
 
         raise BitbucketBaseAPIException()

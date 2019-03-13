@@ -1,12 +1,9 @@
-import logging
 from dataclasses import asdict, dataclass
 
 from .base import KatkaService
 from .conf import settings
 from .credentials import CredentialsProvider
 from .exceptions import bitbucket_service_exception_to_api
-
-log = logging.getLogger(__name__)
 
 
 @dataclass

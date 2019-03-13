@@ -1,9 +1,6 @@
-import logging
 from dataclasses import dataclass
 
 from .service import BitbucketService
-
-log = logging.getLogger(__name__)
 
 
 @dataclass

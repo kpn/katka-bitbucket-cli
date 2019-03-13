@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 
 from rest_framework.exceptions import APIException
@@ -6,6 +7,8 @@ from . import constants
 from .exceptions import NoTagsCouldBeFetchedException
 from .service import BitbucketService
 from .tags import BitbucketTags
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -29,13 +32,15 @@ class BitbucketCommits(BitbucketService):
     )
 
     def __post_init__(self):
+        super().__post_init__()
+
         self.tags_provider = self.tags_provider or BitbucketTags(
+            credentials_provider=self.credentials_provider,
             start=self.start,
             limit=self.limit or constants.DEFAULT_COMMIT_HISTORY_TAGS_LIMIT,
             project_key=self.project_key,
             repository_name=self.repository_name,
         )
-        super().__post_init__()
 
     def _enrich_commit_with_tags(self, commits: list = ()):
         """
@@ -55,7 +60,10 @@ class BitbucketCommits(BitbucketService):
 
         try:
             tags = self.tags_provider.get_tags()
-        except APIException:
+        except APIException as ex:
+            logger.error(
+                f'An error occurred while fetching tags to enrich commit history: HTTP {ex.status_code} - {str(ex)}'
+            )
             raise NoTagsCouldBeFetchedException()
 
         if not tags or not tags.get('values'):
